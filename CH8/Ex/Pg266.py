@@ -1,6 +1,4 @@
 from tkinter import *
-app = Tk()
-app.title('Head-Ex Deliveries')
 
 def save_data():
     fileD = open("deliveries.txt", "a")
@@ -23,6 +21,9 @@ def read_depots(file):
     for line in depots_f:
         depots.append(line.rstrip())
     return depots
+
+app = Tk()
+app.title('Head-Ex Deliveries')
 
 Label(app, text = "Depot:").pack()
 depot = StringVar()
