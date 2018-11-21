@@ -65,18 +65,15 @@ def save_location():
     else:
         os.remove("src/location.txt")
         cb.set("0")
-# Function used to save the download history
+
+#   Function used to save the download history
 def save_history():
     history_len()
-    if path.exists("src/history.txt"):
-        history_f=open("src/history.txt","a+")
-        history_f.write("%s\n"%link.get())
-        history_f.close()
-    else:
-        history_f=open("src/history.txt","w+")
-        history_f.write("%s"%link.get())
-        history_f.close()
+    history_f=open("src/history.txt","a+")
+    history_f.write("%s\n"%link.get())
+    history_f.close()
 
+#   Func used to get the history from history.txt
 def read_history(file):
     history_len()
     if path.exists(file):
@@ -84,24 +81,30 @@ def read_history(file):
         history_f=open(file)
         for line in history_f:
             history.append(line.strip())
+        history_f.close()
         return history
+    else:
+        history = open("src/history.txt", "w+")
+        history.close()
 
+#   Function to check the length of the history and if its to big it deletes the file
 def history_len():
     count = 0
-    for line in open("src/history.txt").readlines():
+    count_f=open("src/history.txt")
+    for line in count_f.readlines():
         count += 1
+    count_f.close
     if count >= 30:
         print(count)
         os.remove("src/history.txt")
 
-
-#function to browse for download directory
+#   function to browse for download directory
 def browse():
     global f_path
     directory = askdirectory()
     f_path.set(directory)
 
-#Start of Program
+#   Start of Program
 app = Tk()
 app.title("Youtube Downloader")
 app.geometry("600x125")
@@ -110,28 +113,38 @@ app.geometry("600x125")
 Label(app,text="Download Location:").grid(column="1")
 f_path = StringVar()
 f_path.set("Select a Download Location ")
-Entry(app, textvariable=f_path, state="readonly",width="50").grid(column="1",padx='20',pady='2')
+Entry(app, textvariable=f_path, state="readonly",width="53").grid(column="1",padx='20',pady='2')
 
-#browse button
+#   Browse button
 Button(app, text="Browse", command=browse,width=15).grid(column="2", row="1")
 
-#Url
+#   Url stuff
 Label(app, text="Video Url:").grid(column="1",row="2")
-history = read_history("src/history.txt")
+
+#   Checks to see if the history file exists and creates it if it isnt present
+if path.exists("src/history.txt"):
+    history = read_history("src/history.txt")
+else:
+    history = []
+    history_f = open("src/history.txt", "w")
+    history_f.close()
+
+#   Combobox for url entry
 link = Combobox(app, text="Url..",width="50",values=history)
 link.grid(column="1",row="3")
 
-#video download button
+#    Video download button
 Button(app, text="Download Video", command=video_dl,width=15).grid(column="2",row="3")
 
-#audio download button
+#   Audio download button
 Button(app, text="Download Audio", command=audio_dl,width=15).grid(column="3",row="3")
 
-#save download location
+#   Save download location
 cb = StringVar()
 cb.set("0")
 Checkbutton(app,text="Save Location",variable=cb,comman=save_location).grid(column=3,row=1)
 
+#   Checks to see if location.txt exists
 if path.exists("src/location.txt"):
     cb.set("1")
     cb_f = open("src/location.txt")
@@ -141,6 +154,7 @@ if path.exists("src/location.txt"):
 else:
     cb.set("0")
 
+#   Notice message to the user
 Label(app, text="Program will freeze during download, don't panic & be patient").grid(column=1,row=5)
 
 app.mainloop()
